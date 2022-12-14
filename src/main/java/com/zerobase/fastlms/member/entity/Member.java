@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Member {
     @Id
-    private String userEmail;
+    private String userId;
 
     private String userName;
     private String phone;
@@ -24,4 +24,9 @@ public class Member {
     private boolean emailAuthYn;
     private LocalDateTime emailAuthTime;
     private String emailAuthKey;
+
+    private String resetPasswordKey;
+    private LocalDateTime resetPasswordLimitTime;
+
+    private boolean adminYn;
 }
