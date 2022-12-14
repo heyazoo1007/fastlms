@@ -23,34 +23,16 @@ public class MainController {
 
     @RequestMapping("/")
     public String index() {
-        String email = "busyheyazoo1007@gmail.com";
-        String subject = "안녕하세요. 제로베이스 입니다.";
-        String text = "<p>안녕하세요</p><p>반갑습니다</p>";
-        mailComponents.sendMail(email, subject, text);
+//        String email = "busyheyazoo1007@gmail.com";
+//        String subject = "안녕하세요. 제로베이스 입니다.";
+//        String text = "<p>안녕하세요</p><p>반갑습니다</p>";
+//        mailComponents.sendMail(email, subject, text);
 
         return "index";
     }
 
-    // request -> WEB -> SERVER
-    // response -> SERVER -> WEB
-    @RequestMapping("/hello")
-    public void hello(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
-        PrintWriter printWriter = response.getWriter();
-
-        String message = "<html>" +
-                "<head>" +
-                "<meta charset=\"UTF-8\">" +
-                "</head>" +
-                "<body>" +
-                "<p>hello</p> " +
-                "<p>this is fastlms website</p>" +
-                "<p> 한글 입니다. </p>" +
-                "</body>" +
-                "</html>";
-
-        printWriter.write(message);
-        printWriter.close();
+    @RequestMapping("/error/denied")
+    public String errorDenied() {
+        return "error/denied";
     }
 }
