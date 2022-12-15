@@ -10,6 +10,8 @@ public class MemberParameter {
     String searchType;
     String searchValue;
 
+    String userId;
+
     /**
      * limit 0, 10 --> pageIndex : 1
      * limit 10, 10 --> pageIndex : 2
