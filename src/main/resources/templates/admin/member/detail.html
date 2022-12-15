@@ -51,6 +51,25 @@
                     <th>관리자 여부</th>
                     <td><p th:text="${member.adminYn}"></p></td>
                 </tr>
+                <tr>
+                    <th>회원 상태</th>
+                    <td>
+                        <p>
+                            현재 상태 : <span th:text="${member.userStatus}"></span>
+                        </p>
+                        <div>
+                            <form method="post" accept-charset="/admin/member/status.do">
+                                <input th:value="${member.userId}" type="hidden" name="userId"/>
+                                <select name="userStatus">
+                                    <option value="REQUEST">가입 승인 중</option>
+                                    <option value="ING">정상 이용 중</option>
+                                    <option value="STOP">정지 중</option>
+                                </select>
+                                <button type="submit">상태 변경</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
 

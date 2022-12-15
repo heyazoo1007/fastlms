@@ -1,13 +1,15 @@
-package com.zerobase.fastlms.admin;
+package com.zerobase.fastlms.admin.controller;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
 import com.zerobase.fastlms.admin.model.MemberParameter;
+import com.zerobase.fastlms.admin.model.MemberStatusInput;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -47,5 +49,13 @@ public class AdminMemberController {
         model.addAttribute("memberDto", memberDto);
 
         return "admin/member/detail";
+    }
+
+    @PostMapping("/admin/member/status.do")
+    public String status(Model model, MemberStatusInput parameter) {
+        boolean result =
+        memberService.updateStatus(parameter.getUserId(), parameter.getUserStatus());
+
+        return "redirect:/admin/member/detail.do?userId" + parameter.getUserId();
     }
 }

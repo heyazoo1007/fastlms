@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Member {
+public class Member implements MemberCode {
     @Id
     private String userId;
 
@@ -29,4 +29,6 @@ public class Member {
     private LocalDateTime resetPasswordLimitTime;
 
     private boolean adminYn;
+
+    private String userStatus; // 이용 가능,불가능 상태
 }

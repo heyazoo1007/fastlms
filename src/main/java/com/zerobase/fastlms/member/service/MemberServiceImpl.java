@@ -5,7 +5,9 @@ import com.zerobase.fastlms.admin.mapper.MemberMapper;
 import com.zerobase.fastlms.admin.model.MemberParameter;
 import com.zerobase.fastlms.components.MailComponents;
 import com.zerobase.fastlms.exception.MemberNotEmailAuthException;
+import com.zerobase.fastlms.exception.MemberStopUserException;
 import com.zerobase.fastlms.member.entity.Member;
+import com.zerobase.fastlms.member.entity.MemberCode;
 import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
 import com.zerobase.fastlms.member.repository.MemberRepository;
@@ -24,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.zerobase.fastlms.member.entity.MemberCode.MEMBER_STATUS_ING;
+import static com.zerobase.fastlms.member.entity.MemberCode.MEMBER_STATUS_REQUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
                 .createdAt(LocalDateTime.now())
                 .emailAuthYn(false)
                 .emailAuthKey(uuid)
+                .userStatus(MEMBER_STATUS_REQUEST)
                 .build();
         memberRepository.save(member);
 
@@ -78,11 +84,37 @@ public class MemberServiceImpl implements MemberService {
             return false;
         }
 
+        member.setUserStatus(MEMBER_STATUS_ING);
         member.setEmailAuthYn(true);
         member.setEmailAuthTime(LocalDateTime.now());
         memberRepository.save(member);
 
         return true;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Optional<Member> optionalMember = memberRepository.findByUserName((username));
+        validateMember(optionalMember);
+
+        Member member = optionalMember.get();
+        if (MEMBER_STATUS_REQUEST.equals(member.getUserStatus())) {
+            throw new MemberNotEmailAuthException("이메일 인증 후 로그인을 해주세요");
+        }
+
+        if (MemberCode.MEMBER_STATUS_STOP.equals(member.getUserStatus())) {
+            throw new MemberStopUserException("정지된 회원입니다.");
+        }
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        if (member.isAdminYn()) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+
+        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
     }
 
     @Override
@@ -155,8 +187,6 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("유효한 기간이 아닙니다.");
         }
 
-
-
         return true;
     }
 
@@ -188,26 +218,19 @@ public class MemberServiceImpl implements MemberService {
         return MemberDto.of(member);
     }
 
-
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Optional<Member> optionalMember = memberRepository.findByUserName((username));
-        validateMember(optionalMember);
+    public boolean updateStatus(String userId, String userStatus) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
 
         Member member = optionalMember.get();
-        if (!member.isEmailAuthYn()) {
-            throw new MemberNotEmailAuthException("이메일 인증 후 로그인을 해주세요");
-        }
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        member.setUserStatus(userStatus);
+        memberRepository.save(member);
 
-        if (member.isAdminYn()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-
-        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
+        return true;
     }
 
     private static void validateMember(Optional<Member> optionalMember) {

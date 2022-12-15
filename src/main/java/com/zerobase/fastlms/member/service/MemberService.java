@@ -27,4 +27,7 @@ public interface MemberService extends UserDetailsService {
     List<MemberDto> list(MemberParameter parameter);
 
     MemberDto detail(String userId);
+
+    // 회원 상태 변경
+    boolean updateStatus(String userId, String userStatus);
 }
