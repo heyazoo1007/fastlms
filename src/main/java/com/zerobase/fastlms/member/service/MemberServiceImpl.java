@@ -233,6 +233,21 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Override
+    public boolean updatePassword(String userId, String password) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        member.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        memberRepository.save(member);
+
+        return true;
+    }
+
     private static void validateMember(Optional<Member> optionalMember) {
         if (!optionalMember.isPresent()) {
             throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");

@@ -30,4 +30,6 @@ public interface MemberService extends UserDetailsService {
 
     // 회원 상태 변경
     boolean updateStatus(String userId, String userStatus);
+
+    boolean updatePassword(String userId, String password);
 }

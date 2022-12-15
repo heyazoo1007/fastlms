@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberStatusInput {
+public class MemberInput {
     String userId;
     String userStatus;
+    String password;
 }

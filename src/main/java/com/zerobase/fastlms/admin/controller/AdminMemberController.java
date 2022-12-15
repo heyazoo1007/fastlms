@@ -2,7 +2,7 @@ package com.zerobase.fastlms.admin.controller;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
 import com.zerobase.fastlms.admin.model.MemberParameter;
-import com.zerobase.fastlms.admin.model.MemberStatusInput;
+import com.zerobase.fastlms.admin.model.MemberInput;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +52,17 @@ public class AdminMemberController {
     }
 
     @PostMapping("/admin/member/status.do")
-    public String status(Model model, MemberStatusInput parameter) {
+    public String status(Model model, MemberInput parameter) {
         boolean result =
         memberService.updateStatus(parameter.getUserId(), parameter.getUserStatus());
+
+        return "redirect:/admin/member/detail.do?userId" + parameter.getUserId();
+    }
+
+    @PostMapping("/admin/member/status.do")
+    public String ㅔㅁㄴㄴ잭ㅇ(Model model, MemberInput parameter) {
+        boolean result =
+                memberService.updatePassword(parameter.getUserId(), parameter.getUserStatus());
 
         return "redirect:/admin/member/detail.do?userId" + parameter.getUserId();
     }
