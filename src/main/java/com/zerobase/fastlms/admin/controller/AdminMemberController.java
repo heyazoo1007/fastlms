@@ -59,8 +59,8 @@ public class AdminMemberController {
         return "redirect:/admin/member/detail.do?userId" + parameter.getUserId();
     }
 
-    @PostMapping("/admin/member/status.do")
-    public String ㅔㅁㄴㄴ잭ㅇ(Model model, MemberInput parameter) {
+    @PostMapping("/admin/member/password.do")
+    public String password(Model model, MemberInput parameter) {
         boolean result =
                 memberService.updatePassword(parameter.getUserId(), parameter.getUserStatus());
 
