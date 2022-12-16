@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CategoryInput {
+    long id;
     String categoryName;
 
 }

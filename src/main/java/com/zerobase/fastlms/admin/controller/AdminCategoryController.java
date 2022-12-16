@@ -24,6 +24,13 @@ public class AdminCategoryController {
         return "redirect:/admin/category/list.do";
     }
 
+    @PostMapping("/admin/category/delete.do")
+    public String delete(Model model, CategoryInput parameter) {
+        boolean result = categoryService.delete(parameter.getId());
+
+        return "redirect:/admin/category/list.do";
+    }
+
     @GetMapping("/admin/category/list.do")
     public String list(Model model, MemberParameter parameter) {
         List<CategoryDto> list = categoryService.list();

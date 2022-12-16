@@ -11,7 +11,22 @@
         .list table th, .list table td {
             border:solid 1px #000;
         }
+        p.nothing {
+            text-align: center;
+            padding: 100px;
+        }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('form[name=deleteForm]').on('submit', function () {
+
+                if (!confirm('카테고리를 삭제하시겠습니까?')) {
+                    return false;
+                }
+            })
+        })
+    </script>
 </head>
 <body>
     <h1>카테고리 관리</h1>
@@ -39,6 +54,17 @@
                 <td th:text="${x.categoryName}"></td>
                 <td th:text="${x.sortValue}"></td>
                 <td th:text="${x.usingYn}"></td>
+                <td>
+                    <form name="deleteForm" method="post" action="/admin/category/delete.do">
+                        <input type="hidden" name="id" th:value="${x.id}">
+                        <button type="submit">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.size(list) < 1}">
+                <td colspan="5">
+                    <p class="nothing">내용이 없습니다.</p>
+                </td>
             </tr>
             </tbody>
         </table>
