@@ -21,7 +21,7 @@ public class CourseController {
 
     @PostMapping("/admin/course/add.do")
     public String add(Model model, CourseInput parameter) {
-        boolean result = courseService.add(parameter);
+        courseService.add(parameter);
 
         return "admin/course/add";
     }
