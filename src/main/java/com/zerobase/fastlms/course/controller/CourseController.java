@@ -70,6 +70,14 @@ public class CourseController extends BaseController {
         return "redirect:/admin/course/list.do";
     }
 
+    @PostMapping("/admin/course/delete.do")
+    public String delete(Model model, HttpServletRequest request,
+                         CourseInput parameter) {
+        courseService.delete(parameter.getIdList());
+
+        return "redirect:/admin/course/list.do";
+    }
+
     @GetMapping("/admin/course/list.do")
     public String list(Model model, CourseParameter parameter) {
 

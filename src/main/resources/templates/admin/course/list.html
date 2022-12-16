@@ -11,9 +11,23 @@
       .list table th, .list table td {
         border:solid 1px #000;
       }
-      p.nothing {
-        text-align: center;
-        padding: 100px;
+      .list .buttons {
+          position: relative;
+          padding: 10px 0;
+      }
+      .list .button a, .list .buttons button {
+          border-width: 0;
+          background-color: transparent;
+          text-decoration: underline;
+          font-size: 12px;
+          line-height: 20px;
+          height: 20px;
+          color: black;
+      }
+      .list .buttons .total-count {
+          position: absolute;
+          top: 0;
+          right: 0;
       }
       .pager {
           margin-top: 20px;
@@ -27,6 +41,44 @@
   <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
   <script>
     $(document).ready(function () {
+
+        $('#deleteButton').on('click', function() {
+
+            $('#selectAll').on('click', function () {
+
+                var checked = $(this).is(':checked');
+
+                $('#dataList input[type=checkbox]').each(function(k, v) {
+                    $(this).prop('checked, checked');
+                });
+                
+            });
+
+            var $checked = $('#dataList input[type=checkbox]:checked');
+            console.log($checked.length);
+
+            if ($checked.length < 1) {
+                alert('삭제할 데이터를 선택해 주세요.');
+                return false;
+            }
+
+            if (!confirm('선택한 데이터를 삭제하시겠습니까?')) {
+                return false;
+            }
+
+            var idList = [];
+            $.each($checked, function (k, v) {
+                console.log(($this).val());
+                idList.push($(this).val());
+            });
+
+            console.log(idList);
+            console.log(idList.join(','));
+
+            var $deleteForm = $('form[name=deleteForm]');
+            $deleteForm.find('input[name=idList]').val(idList.join(','));
+            $deleteForm.submit();
+        });
     });
   </script>
 </head>
@@ -34,19 +86,27 @@
   <h1>강좌 관리</h1>
   <div>
       <a href="/admin/course/add.do">강좌 등록</a>
+      <button id="deleteButton" type="button">선택 삭제</button>
   </div>
 
   <div class="list">
+      <div class="buttons">
+          <a class="total-count">전체 <span th:text="${totalCount}"></span></a>
+          <a href="/admin/course/add.do">강좌 등록</a>
+          <button type="button">선택 삭제</button>
+      </div>
     <table>
         <thead>
             <tr>
-                <th>Id</th>
+                <th><input id="selectAll" type="checkbox"></th>
+                <th>No</th>
                 <th>강좌명</th>
                 <th>등록일자</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="dataList">
             <tr th:each="x : ${list}">
+                <td><input type="checkbox" th:value="${x.id}"></td>
                 <td th:each="${x.sequence}">1</td>
                 <td>
                     <p>
@@ -62,6 +122,10 @@
     </table>
       <div class="pager" th:utext="${pager}"></div>
   </div>
+
+<form name="deleteForm" method="post" action="/admin/course/delete.do">
+    <input type="hidden" name="idList"/>
+</form>
 
 </body>
 </html>
