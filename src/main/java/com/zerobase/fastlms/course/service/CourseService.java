@@ -10,5 +10,9 @@ public interface CourseService {
 
     boolean add(CourseInput parameter);
 
+    boolean modify(CourseInput parameter);
+
     List<CourseDto> list(CourseParameter parameter);
+
+    CourseDto getById(long id);
 }

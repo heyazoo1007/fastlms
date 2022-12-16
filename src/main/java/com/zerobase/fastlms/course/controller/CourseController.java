@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -20,17 +21,49 @@ import java.util.List;
 public class CourseController extends BaseController {
     private final CourseService courseService;
 
-    @GetMapping("/admin/course/add.do")
-    public String add(Model model) {
+    @GetMapping(value = {"/admin/course/add.do", "/admin/course/edit.do"})
+    public String add(Model model, HttpServletRequest request
+            , CourseInput parameter) {
+
+        boolean isEditMode = request.getRequestURI().contains("/edit.do");
+        CourseDto courseDto = new CourseDto();
+
+        if (isEditMode) {
+            long id = parameter.getId();
+            CourseDto existCourse = courseService.getById(id);
+
+            if (existCourse == null) {
+                model.addAttribute("message", "강좌 정보가 존재 하지 않습니다.");
+                return "common/error";
+            }
+            model.addAttribute("isEditMode", isEditMode);
+            model.addAttribute("courseDto", courseDto);
+
+            return "admin/course/add";
+        }
+
 
         return "admin/course/add";
     }
 
-    @PostMapping("/admin/course/add.do")
-    public String add(Model model, CourseInput parameter) {
-        courseService.add(parameter);
+    @PostMapping(value = {"/admin/course/add.do", "/admin/course/edit.do"})
+    public String add(Model model, CourseInput parameter, HttpServletRequest request) {
 
-        return "admin/course/add";
+        boolean isEditMode = request.getRequestURI().contains("/edit.do");
+
+        if (isEditMode) {
+            long id = parameter.getId();
+            CourseDto courseDto = courseService.getById(id);
+            if (courseDto == null) {
+                model.addAttribute("message", "강좌정보가 존재하지 않습니다.");
+                return "common/error";
+            }
+            boolean result = courseService.modify(parameter);
+        } else {
+            courseService.add(parameter);
+        }
+
+        return "redirect:/admin/course/list.do";
     }
 
     @GetMapping("/admin/course/list.do")

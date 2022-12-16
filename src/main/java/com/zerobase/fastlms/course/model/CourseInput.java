@@ -8,5 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class CourseInput {
+    private long id;
     private String subject;
 }

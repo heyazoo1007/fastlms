@@ -49,7 +49,10 @@
             <tr th:each="x : ${list}">
                 <td th:each="${x.sequence}">1</td>
                 <td>
-                    <p th:text="${x.subject}"></p>
+                    <p>
+                        <a th:reft="'edit.do?id=' + ${x.id}"
+                        th:text="${x.subject}">강좌명</a>
+                    </p>
                 </td>
                 <td>
                     <p th:text="${x.createdAt}"></p>
