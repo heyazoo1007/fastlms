@@ -28,6 +28,6 @@ public class Course {
     private long price;
     private long salePrice;
     private LocalDateTime saleEndTime;
-    private LocalDateTime cratedAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
