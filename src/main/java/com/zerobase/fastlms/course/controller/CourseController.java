@@ -1,6 +1,7 @@
 package com.zerobase.fastlms.course.controller;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.admin.service.CategoryService;
 import com.zerobase.fastlms.course.model.CourseDto;
 import com.zerobase.fastlms.course.model.CourseInput;
 import com.zerobase.fastlms.course.model.CourseParameter;
@@ -20,10 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseController extends BaseController {
     private final CourseService courseService;
+    private final CategoryService categoryService;
 
     @GetMapping(value = {"/admin/course/add.do", "/admin/course/edit.do"})
     public String add(Model model, HttpServletRequest request
             , CourseInput parameter) {
+
+        model.addAttribute("category", categoryService.list());
 
         boolean isEditMode = request.getRequestURI().contains("/edit.do");
         CourseDto courseDto = new CourseDto();

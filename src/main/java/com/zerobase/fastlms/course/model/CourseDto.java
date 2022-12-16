@@ -3,6 +3,7 @@ package com.zerobase.fastlms.course.model;
 import com.zerobase.fastlms.course.entity.Course;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CourseDto {
     Long id;
+    Long categoryId;
     String imagePath;
     String keyword;
     String subject;
@@ -19,7 +21,7 @@ public class CourseDto {
     String contents;
     long price;
     long salePrice;
-    LocalDateTime saleEndTime;
+    LocalDate saleEndDate;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
@@ -29,6 +31,7 @@ public class CourseDto {
     public static CourseDto of(Course course) {
         return CourseDto.builder()
                 .id(course.getId())
+                .categoryId(course.getCategoryId())
                 .imagePath(course.getImagePath())
                 .keyword(course.getKeyword())
                 .subject(course.getSubject())
@@ -36,7 +39,7 @@ public class CourseDto {
                 .contents(course.getContents())
                 .price(course.getPrice())
                 .salePrice(course.getSalePrice())
-                .saleEndTime(course.getSaleEndTime())
+                .saleEndDate(course.getSaleEndDate())
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();

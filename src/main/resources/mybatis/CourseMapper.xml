@@ -42,10 +42,11 @@
 
     <select id="selectList"
             parameterType="com.zerobase.fastlms.course.model.CourseParameter"
-            resultType="com.zerobase.fastlms.course.dto.CourseDto">
+            resultType="com.zerobase.fastlms.course.model.CourseDto">
             select * from member
             where 1 = 1
                 <include refid="selectListWhere"/>
+            order by created_at desc
             limit #{pageStart}, #{pageEnd}
     </select>
 

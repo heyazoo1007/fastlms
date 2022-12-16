@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +23,20 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
 
+
     @Override
     public boolean add(CourseInput parameter) {
+        LocalDate saleEndDate = getLocalDate(parameter.getSaleEndTimeText());
+
         courseRepository.save(Course.builder()
+                .categoryId(parameter.getCategoryId())
                 .subject(parameter.getSubject())
+                .keyword(parameter.getKeyword())
+                .summary(parameter.getSummary())
+                .contents(parameter.getContents())
+                .price(parameter.getPrice())
+                .salePrice(parameter.getSalePrice())
+                .saleEndDate(saleEndDate)
                 .createdAt(LocalDateTime.now())
                 .build());
 
@@ -33,14 +45,24 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean modify(CourseInput parameter) {
+        LocalDate saleEndDate = getLocalDate(parameter.getSaleEndTimeText());
+
         Optional<Course> optionalCourse = courseRepository.findById(parameter.getId());
         if (!optionalCourse.isPresent()) {
             return false;
         }
 
         Course course = optionalCourse.get();
+        course.setCategoryId(parameter.getCategoryId());
         course.setSubject(parameter.getSubject());
+        course.setKeyword(parameter.getKeyword());
+        course.setSummary(parameter.getSummary());
+        course.setContents(parameter.getContents());
+        course.setPrice(parameter.getPrice());
+        course.setSalePrice(parameter.getSalePrice());
+        course.setSaleEndDate(saleEndDate);
         course.setUpdatedAt(LocalDateTime.now());
+
         courseRepository.save(course);
 
         return true;
@@ -66,5 +88,17 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseDto getById(long id) {
         return courseRepository.findById(id).map(CourseDto::of).orElse(null);
+    }
+
+    private LocalDate getLocalDate(String value) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try {
+            return LocalDate.parse(value, formatter);
+        } catch (Exception e) {
+
+        }
+
+        return null;
     }
 }
