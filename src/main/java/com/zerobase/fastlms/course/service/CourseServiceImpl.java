@@ -1,18 +1,25 @@
 package com.zerobase.fastlms.course.service;
 
+import com.zerobase.fastlms.admin.dto.MemberDto;
 import com.zerobase.fastlms.course.entity.Course;
+import com.zerobase.fastlms.course.mapper.CourseMapper;
+import com.zerobase.fastlms.course.model.CourseDto;
 import com.zerobase.fastlms.course.model.CourseInput;
+import com.zerobase.fastlms.course.model.CourseParameter;
 import com.zerobase.fastlms.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseMapper courseMapper;
 
     @Override
     public boolean add(CourseInput parameter) {
@@ -22,5 +29,22 @@ public class CourseServiceImpl implements CourseService {
                 .build());
 
         return true;
+    }
+
+    @Override
+    public List<CourseDto> list(CourseParameter parameter) {
+        long totalCount = courseMapper.selectListCount(parameter);
+
+        List<CourseDto> list = courseMapper.selectList(parameter);
+        if (!CollectionUtils.isEmpty(list)) {
+            int i = 0;
+            for (CourseDto x : list) {
+                x.setTotalCount(totalCount);
+                x.setSequence(totalCount - parameter.getPageStart() - i);
+                i++;
+            }
+        }
+
+        return null;
     }
 }

@@ -15,6 +15,14 @@
         text-align: center;
         padding: 100px;
       }
+      .pager {
+          margin-top: 20px;
+          text-align: center;
+      }
+      .pager a.on {
+          font-weight: bold;
+          color: red;
+      }
     </style>
   <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
   <script>
@@ -29,13 +37,27 @@
   </div>
 
   <div class="list">
-    <tabl>
-      <thead>
-      <tr>
-        <td></td>
-      </tr>
-      </thead>
-    </tabl>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>강좌명</th>
+                <th>등록일자</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="x : ${list}">
+                <td th:each="${x.sequence}">1</td>
+                <td>
+                    <p th:text="${x.subject}"></p>
+                </td>
+                <td>
+                    <p th:text="${x.createdAt}"></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+      <div class="pager" th:utext="${pager}"></div>
   </div>
 
 </body>
