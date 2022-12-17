@@ -8,6 +8,5 @@ import lombok.Setter;
 @Setter
 public class TakeCourseParameter extends CommonParameter {
     private Long id;
-    private Long categoryId;
-
+    private String status;
 }

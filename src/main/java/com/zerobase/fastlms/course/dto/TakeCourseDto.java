@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -23,4 +24,9 @@ public class TakeCourseDto {
 
     private Long totalCount;
     private Long sequence;
+
+    public String getCreatedAtText() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return createdAt != null ? createdAt.format(formatter) : "";
+    }
 }

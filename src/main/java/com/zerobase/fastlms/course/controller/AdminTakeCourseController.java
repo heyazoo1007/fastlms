@@ -3,6 +3,7 @@ package com.zerobase.fastlms.course.controller;
 import com.zerobase.fastlms.course.dto.CourseDto;
 import com.zerobase.fastlms.course.dto.TakeCourseDto;
 import com.zerobase.fastlms.course.model.CourseParameter;
+import com.zerobase.fastlms.course.model.ServiceResult;
 import com.zerobase.fastlms.course.model.TakeCourseParameter;
 import com.zerobase.fastlms.course.service.CourseService;
 import com.zerobase.fastlms.course.service.TakeCourseService;
@@ -19,7 +20,7 @@ import java.util.List;
 public class AdminTakeCourseController extends BaseController {
     private final TakeCourseService takeCourseService;
 
-    @GetMapping("/admin/course/list.do")
+    @GetMapping("/admin/takecourse/list.do")
     public String list(Model model, TakeCourseParameter parameter) {
 
         parameter.init();
@@ -43,5 +44,17 @@ public class AdminTakeCourseController extends BaseController {
         model.addAttribute("pager", pagerHtml);
 
         return "admin/takecourse/list";
+    }
+
+    @GetMapping("/admin/takecourse/status.do")
+    public String status(Model model, TakeCourseParameter parameter) {
+        ServiceResult serviceResult =
+                takeCourseService.updateStatus(parameter.getId(), parameter.getStatus());
+        if (!serviceResult.isResult()) {
+            model.addAttribute("message", serviceResult.getMessage());
+            return "common/error";
+        }
+
+        return "redirect:/admin/takecourse/list.do";
     }
 }
