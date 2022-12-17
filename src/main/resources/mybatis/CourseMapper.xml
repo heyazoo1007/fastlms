@@ -42,7 +42,7 @@
 
     <select id="selectList"
             parameterType="com.zerobase.fastlms.course.model.CourseParameter"
-            resultType="com.zerobase.fastlms.course.model.CourseDto">
+            resultType="com.zerobase.fastlms.course.dto.CourseDto">
             select *
             from course
             where 1 = 1

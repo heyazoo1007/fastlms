@@ -14,7 +14,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
-public class CourseApiController {
+public class ApiCourseController {
     private final CourseService courseService;
 
     @PostMapping("/api/course/request.api")

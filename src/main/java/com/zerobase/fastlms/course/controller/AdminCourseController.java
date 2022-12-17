@@ -1,7 +1,7 @@
 package com.zerobase.fastlms.course.controller;
 
 import com.zerobase.fastlms.admin.service.CategoryService;
-import com.zerobase.fastlms.course.model.CourseDto;
+import com.zerobase.fastlms.course.dto.CourseDto;
 import com.zerobase.fastlms.course.model.CourseInput;
 import com.zerobase.fastlms.course.model.CourseParameter;
 import com.zerobase.fastlms.course.service.CourseService;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class CourseAdminController extends BaseController {
+public class AdminCourseController extends BaseController {
     private final CourseService courseService;
     private final CategoryService categoryService;
 

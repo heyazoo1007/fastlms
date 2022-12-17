@@ -1,4 +1,4 @@
-package com.zerobase.fastlms.course.model;
+package com.zerobase.fastlms.course.dto;
 
 import com.zerobase.fastlms.course.entity.Course;
 import lombok.*;

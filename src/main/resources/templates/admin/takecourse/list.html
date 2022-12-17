@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+      .list table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .list table th, .list table td {
+        border:solid 1px #000;
+      }
+      .list .buttons {
+          position: relative;
+          padding: 10px 0;
+      }
+      .list .button a, .list .buttons button {
+          border-width: 0;
+          background-color: transparent;
+          text-decoration: underline;
+          font-size: 12px;
+          line-height: 20px;
+          height: 20px;
+          color: black;
+      }
+      .list .buttons .total-count {
+          text-align: right;
+      }
+      .pager {
+          margin-top: 20px;
+          text-align: center;
+      }
+      .pager a.on {
+          font-weight: bold;
+          color: red;
+      }
+    </style>
+  <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function () {
+
+        $('.row-buttons button'). on('click', function() {
+
+            var status = $(this).val();
+            var id = $(this).closest('div').find('input[name=id]').val();
+
+            var message = status == 'COMPLETE' ? '결제완료 처리 하시겠습니까?' : '수강취소 처리 하시겠습니까?';
+            if (!confirm(message)) {
+                return false;
+            }
+
+            var $procForm = $('#procForm');
+            $procForm.find('input[name=id]').val(id);
+            $procForm.find('input[name=status]').val(status);
+            $procForm.submit();
+        });
+
+    });
+  </script>
+</head>
+<body>
+  <h1>수강 관리</h1>
+
+
+  <div class="list">
+      <div class="buttons">
+          <a class="total-count">전체 <span th:text="${totalCount}"></span></a>
+      </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>등록일자</th>
+                <th>강좌명</th>
+                <th colspan="3">신청인</th>
+                <th>상태</th>
+                <th>비고</th>
+            </tr>
+        </thead>
+        <tbody id="dataList">
+            <tr th:each="x : ${list}">
+                <td><input type="checkbox" th:value="${x.id}"></td>
+                <td th:each="${x.sequence}">1</td>
+                <td>
+                    <p th:text="${x.createdAt}"></p>
+                </td>
+                <td>
+                    <p th:text="${x.subject}">강좌명</p>
+                </td>
+                <td>
+                    <p th:text="${x.userName}"></p>
+                </td>
+                <td>
+                    <p th:text="${x.userId}"></p>
+                </td>
+                <td>
+                    <p th:text="${x.phone}"></p>
+                </td>
+                <td>
+                    <p th:text="${x.status}"></p>
+
+                    <p th:text="${x.status eq 'REQUST'}">수강신청</p>
+                    <p th:text="${x.status eq 'COMPLETE'}">결제완료</p>
+                    <p th:text="${x.status eq 'CANCEL'}">수강취소</p>
+                </td>
+                <td>
+                    <div class="row-buttons" th:if="${x.status eq 'REQUEST'}">
+                        <input type="hidden" name="id" th:value="${x.id}"/>
+                        <button value="COMPLETE" type="button">결제완료 처리</button>
+                        <button value="CANCEL" type="button">수강취소 처리</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+      <div class="pager" th:utext="${pager}"></div>
+
+</div>
+
+<form id="procForm" method="post" action="/admin/takecourse/status.do">
+    <input type="hidden" name="id"/>
+    <input type="hidden" name="status"/>
+</form>
+
+</body>
+</html>

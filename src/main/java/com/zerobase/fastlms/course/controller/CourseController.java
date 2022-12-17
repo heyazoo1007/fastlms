@@ -2,7 +2,7 @@ package com.zerobase.fastlms.course.controller;
 
 import com.zerobase.fastlms.admin.CategoryDto;
 import com.zerobase.fastlms.admin.service.CategoryService;
-import com.zerobase.fastlms.course.model.CourseDto;
+import com.zerobase.fastlms.course.dto.CourseDto;
 import com.zerobase.fastlms.course.model.CourseParameter;
 import com.zerobase.fastlms.course.service.CourseService;
 import lombok.RequiredArgsConstructor;

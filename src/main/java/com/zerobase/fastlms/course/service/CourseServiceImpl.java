@@ -1,5 +1,6 @@
 package com.zerobase.fastlms.course.service;
 
+import com.zerobase.fastlms.course.dto.CourseDto;
 import com.zerobase.fastlms.course.entity.Course;
 import com.zerobase.fastlms.course.entity.TakeCourse;
 import com.zerobase.fastlms.course.entity.TakeCourseCode;
