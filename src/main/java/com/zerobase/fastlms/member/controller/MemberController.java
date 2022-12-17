@@ -1,5 +1,7 @@
 package com.zerobase.fastlms.member.controller;
 
+import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.course.model.ServiceResult;
 import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
 import com.zerobase.fastlms.member.service.MemberService;
@@ -9,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,17 +44,59 @@ public class MemberController {
         return"member/email_auth";
     }
 
-    @GetMapping("/member/info")
-    public String memberInfo() {
-
-        return "member/info";
-    }
-
     @RequestMapping("/member/login")
     public String login() {
         System.out.println("request get");
 
         return "member/login";
+    }
+
+    @GetMapping("/member/info")
+    public String memberInfo(Model model, Principal principal) {
+        String userId = principal.getName();
+
+        MemberDto memberDto = memberService.detail(userId);
+
+        model.addAttribute("memberDto", memberDto);
+
+        return "member/info";
+    }
+
+    @GetMapping("/member/password")
+    public String getMemberPassword(Model model, Principal principal) {
+        String userId = principal.getName();
+
+        MemberDto memberDto = memberService.detail(userId);
+
+        model.addAttribute("memberDto", memberDto);
+
+        return "member/password";
+    }
+
+    @PostMapping("/member/password")
+    public String updateMemberPassword(Model model,
+                                 Principal principal,
+                                 MemberInput parameter) {
+        parameter.setUserId(principal.getName());
+
+        ServiceResult serviceResult = memberService.updateMemberPassword(parameter);
+        if (!serviceResult.isResult()) {
+            model.addAttribute("message", serviceResult.getMessage());
+            return "common/error";
+        }
+
+        return "redirect:/member/info";
+    }
+
+    @GetMapping("/member/takecourse")
+    public String memberTakeCourse(Model model, Principal principal) {
+        String userId = principal.getName();
+
+        MemberDto memberDto = memberService.detail(userId);
+
+        model.addAttribute("memberDto", memberDto);
+
+        return "member/takecourse";
     }
 
     @GetMapping("/member/find/password")
