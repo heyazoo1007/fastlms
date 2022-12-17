@@ -1,6 +1,6 @@
 package com.zerobase.fastlms.admin.service;
 
-import com.zerobase.fastlms.admin.CategoryDto;
+import com.zerobase.fastlms.admin.dto.CategoryDto;
 import com.zerobase.fastlms.admin.model.CategoryInput;
 
 import java.util.List;

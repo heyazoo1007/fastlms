@@ -1,6 +1,6 @@
 package com.zerobase.fastlms.admin.controller;
 
-import com.zerobase.fastlms.admin.CategoryDto;
+import com.zerobase.fastlms.admin.dto.CategoryDto;
 import com.zerobase.fastlms.admin.model.CategoryInput;
 import com.zerobase.fastlms.admin.model.MemberParameter;
 import com.zerobase.fastlms.admin.service.CategoryService;

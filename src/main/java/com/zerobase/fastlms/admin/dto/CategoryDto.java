@@ -1,4 +1,4 @@
-package com.zerobase.fastlms.admin;
+package com.zerobase.fastlms.admin.dto;
 
 import com.zerobase.fastlms.admin.entity.Category;
 import lombok.*;
