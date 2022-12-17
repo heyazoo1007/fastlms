@@ -4,6 +4,7 @@ import com.zerobase.fastlms.member.entity.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -17,6 +18,7 @@ public class MemberDto {
     String phone;
     String password;
     LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 
     boolean emailAuthYn;
     LocalDateTime emailAuthTime;
@@ -36,9 +38,20 @@ public class MemberDto {
                 .userName(member.getUserName())
                 .phone(member.getPhone())
                 .createdAt(member.getCreatedAt())
+                .updatedAt(member.getUpdatedAt())
                 .emailAuthYn(member.isEmailAuthYn())
                 .emailAuthTime(member.getEmailAuthTime())
                 .adminYn(member.isAdminYn())
                 .build();
+    }
+
+    public String getCreatedText() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        return createdAt != null ? createdAt.format(formatter) : "";
+    }
+
+    public String getUpdatedText() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        return createdAt != null ? createdAt.format(formatter) : "";
     }
 }

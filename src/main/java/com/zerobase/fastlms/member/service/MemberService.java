@@ -36,5 +36,5 @@ public interface MemberService extends UserDetailsService {
 
     boolean updatePassword(String userId, String password);
 
-
+    ServiceResult modifyMemberInfo(MemberInput parameter);
 }

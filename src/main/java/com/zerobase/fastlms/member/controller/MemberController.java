@@ -7,6 +7,7 @@ import com.zerobase.fastlms.member.model.ResetPasswordInput;
 import com.zerobase.fastlms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +61,19 @@ public class MemberController {
         model.addAttribute("memberDto", memberDto);
 
         return "member/info";
+    }
+    @PostMapping("/member/info")
+    public String modifyMemberInfo(Model model,
+                                   MemberInput parameter,
+                                   Principal principal) {
+        parameter.setUserId(principal.getName());
+
+       ServiceResult serviceResult = memberService.modifyMemberInfo(parameter);
+       if (!serviceResult.isResult()) {
+           model.addAttribute("message", serviceResult.getMessage());
+           return "common/error";
+       }
+       return "redirect:/member/info";
     }
 
     @GetMapping("/member/password")

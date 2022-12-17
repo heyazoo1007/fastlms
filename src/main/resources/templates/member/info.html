@@ -3,6 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 정보</title>
+    <script scr="https:/cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            $('updateForm').on('submit', function () {
+
+                if (!confirm('회원 정보를 수정하시겠습니까?')) {
+                    return false;
+                }
+
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>회원 정보</h1>
@@ -15,5 +28,40 @@
         <a href="/member/mytakecourse">내 수강 목록</a>
         <hr/>
     </div>
+
+    <div>
+        <form id="updateForm" method="post">
+            <table>
+                <tbody>
+                <tr>
+                    <th>아이디(이메일)</th>
+                    <td><p th:text="${memberDto.userId}">아이디</p></td>
+                </tr>
+                <tr>
+                    <th>이름</th>
+                    <td><p th:text="${memberDto.userName}">이름</p></td>
+                </tr>
+                <tr>
+                    <th>전화번호</th>
+                    <input name="phone" type="text" th:value="${memberDto.phone}"/>
+                </tr>
+                <tr>
+                    <th>가입일</th>
+                    <td><p th:text="${memberDto.getCreatedText()}">생성날짜</p></td>
+                </tr>
+                <tr>
+                    <th>회원정보 수정일</th>
+                    <td><p th:text="${memberDto.getUpdatedText()}">생성날짜</p></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <button type="submit">수정</button>
+            </div>
+
+        </form>
+    </div>
+
 </body>
 </html>

@@ -273,6 +273,23 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Override
+    public ServiceResult modifyMemberInfo(MemberInput parameter) {
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+        member.setPhone(parameter.getPhone());
+        member.setUpdatedAt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+    }
+
     private static void validateMember(Optional<Member> optionalMember) {
         if (!optionalMember.isPresent()) {
             throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
