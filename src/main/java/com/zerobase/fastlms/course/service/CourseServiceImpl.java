@@ -110,6 +110,18 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.findById(id).map(CourseDto::of).orElse(null);
     }
 
+    @Override
+    public List<CourseDto> frontList(CourseParameter parameter) {
+
+        if (parameter.getCategoryId() < 1) {
+            List<Course> courseList = courseRepository.findAll();
+            return CourseDto.of(courseList);
+        }
+
+        return courseRepository.findByCategoryId(parameter.getCategoryId())
+                .map(CourseDto :: of).orElse(null);
+    }
+
     private LocalDate getLocalDate(String value) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

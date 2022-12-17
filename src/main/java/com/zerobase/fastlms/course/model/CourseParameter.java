@@ -2,8 +2,11 @@ package com.zerobase.fastlms.course.model;
 
 import com.zerobase.fastlms.admin.model.CommonParameter;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class CourseParameter extends CommonParameter {
-
+    private long categoryId;
 }

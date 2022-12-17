@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -43,5 +45,18 @@ public class CourseDto {
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();
+    }
+
+    public static List<CourseDto> of(List<Course> courses) {
+
+        if (courses == null) {
+            return null;
+        }
+
+        List<CourseDto> courseDtoList = new ArrayList<>();
+        for (Course course : courses) {
+            courseDtoList.add(CourseDto.of(course));
+        }
+        return courseDtoList;
     }
 }
