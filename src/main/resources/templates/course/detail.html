@@ -3,6 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>강좌 상세페이지</title>
+    <script scr="https:/cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            $('submitForm').on('submit', function () {
+
+                if (!confirm('수강신청을 하시겠습니까?')) {
+                    return false;
+                }
+
+                var $thisForm = $(this);
+                var url = '/api/course/request.api';
+                var parameter = {
+                    courseId: $thisForm.find('input[name=id]').val()
+                };
+
+                axios.post(url, parameter).then(function(response) {
+                    console.log(response);
+                    console.log(response.data);
+
+                    response.data = response.data || {};
+                    response.data.header = response.data.header || {};
+
+                    if (!response.data.header.result) {
+                        alert(response.data.header.message);
+                        return false;
+                    }
+
+                    // 정상처리 되었을 때
+                    alert('강좌가 정상적으로 신청되었습니다.')
+                    location.href = "/";
+
+                }).catch(function (err) {
+                    console.log(err);
+                });
+
+                return false;
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -14,13 +54,15 @@
         <h2>강좌명: <span th:text="${courseDto.subject}">강좌</span></h2>
         <div th:utext="${courseDto.contents}"></div>
         <div>
-            <p>가격 : <span th:text="${courseDto.price}"></span></p>
-            <p>할인 가격 : <span th:text="${courseDto.salePrice}"></span></p>
+            <p>가격 : <span th:text="${courseDto.price}">정가</span></p>
+            <p>할인 가격 : <span th:text="${courseDto.salePrice}">할인가</span></p>
         </div>
 
         <div>
-            <button type="button">수강신청 하기</button>
-            <a href="/course">강좌 목록</a>
+            <form id="submitForm" method="post">
+                <button type="button">수강신청</button>
+                <a href="/course">강좌 목록</a>
+            </form>
         </div>
     </div>
 

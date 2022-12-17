@@ -1,11 +1,12 @@
 package com.zerobase.fastlms.course.service;
 
 import com.zerobase.fastlms.course.entity.Course;
+import com.zerobase.fastlms.course.entity.TakeCourse;
+import com.zerobase.fastlms.course.entity.TakeCourseCode;
 import com.zerobase.fastlms.course.mapper.CourseMapper;
-import com.zerobase.fastlms.course.model.CourseDto;
-import com.zerobase.fastlms.course.model.CourseInput;
-import com.zerobase.fastlms.course.model.CourseParameter;
+import com.zerobase.fastlms.course.model.*;
 import com.zerobase.fastlms.course.repository.CourseRepository;
+import com.zerobase.fastlms.course.repository.TakeCourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,14 +14,15 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
-
     private final CourseRepository courseRepository;
+    private final TakeCourseRepository takeCourseRepository;
     private final CourseMapper courseMapper;
 
 
@@ -70,7 +72,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean delete(String idList) {
-
         if (idList != null && idList.length() > 0) {
             String[] ids = idList.split(",");
             for (String x : ids) {
@@ -112,7 +113,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseDto> frontList(CourseParameter parameter) {
-
         if (parameter.getCategoryId() < 1) {
             List<Course> courseList = courseRepository.findAll();
             return CourseDto.of(courseList);
@@ -129,6 +129,45 @@ public class CourseServiceImpl implements CourseService {
             return CourseDto.of(optionalCourse.get());
         }
         return null;
+    }
+
+    @Override
+    public ServiceResult request(TakeCourseInput parameter) {
+        ServiceResult serviceResult = new ServiceResult();
+
+        Optional<Course> optionalCourse =
+                courseRepository.findById(parameter.getCourseId());
+        if (!optionalCourse.isPresent()) {
+            serviceResult.setResult(false);
+            serviceResult.setMessage("강좌 정보가 존재하지 않습니다.");
+            return serviceResult;
+        }
+
+        Course course = optionalCourse.get();
+
+        String[] statusList = {TakeCourse.STATUS_REQUEST, TakeCourse.STATUS_COMPLETE};
+        long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(
+                course.getId(), parameter.getUserId(), Arrays.asList(statusList)
+        );
+
+        if (count > 0) {
+            serviceResult.setResult(false);
+            serviceResult.setMessage("이미 신청한 강좌 정보가 존재합니다.");
+            return serviceResult;
+        }
+
+        takeCourseRepository.save(TakeCourse.builder()
+                .courseId(course.getId())
+                .userId(parameter.getUserId())
+                .payPrice(course.getSalePrice())
+                .status(TakeCourseCode.STATUS_REQUEST)
+                .createdAt(LocalDateTime.now())
+                .build());
+
+        serviceResult.setResult(true);
+        serviceResult.setMessage("강좌 신청 성공");
+
+        return serviceResult;
     }
 
     private LocalDate getLocalDate(String value) {
