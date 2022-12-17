@@ -16,7 +16,9 @@ public interface MemberService extends UserDetailsService {
     // uuid에 해당하는 계정을 활성화
     boolean emailAuth(String uuid);
 
-    MemberDto detail(String userId);
+    MemberDto memberInfo(String userId);
+
+    ServiceResult modifyMemberInfo(MemberInput parameter);
 
     ServiceResult updateMemberPassword(MemberInput parameter);
 
@@ -29,12 +31,7 @@ public interface MemberService extends UserDetailsService {
     // 입력받은 uuid 값이 유효한지 확인
     boolean checkResetPassword(String uuid);
 
-    List<MemberDto> list(MemberParameter parameter);
 
-    // 회원 상태 변경
-    boolean updateStatus(String userId, String userStatus);
 
-    boolean updatePassword(String userId, String password);
 
-    ServiceResult modifyMemberInfo(MemberInput parameter);
 }

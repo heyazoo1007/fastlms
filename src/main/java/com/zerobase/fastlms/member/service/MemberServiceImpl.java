@@ -94,31 +94,55 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Optional<Member> optionalMember = memberRepository.findByUserName((username));
-        validateMember(optionalMember);
+    public MemberDto memberInfo(String userId) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return null;
+        }
 
         Member member = optionalMember.get();
-        if (MEMBER_STATUS_REQUEST.equals(member.getUserStatus())) {
-            throw new MemberNotEmailAuthException("이메일 인증 후 로그인을 해주세요");
-        }
 
-        if (MemberCode.MEMBER_STATUS_STOP.equals(member.getUserStatus())) {
-            throw new MemberStopUserException("정지된 회원입니다.");
-        }
-
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        if (member.isAdminYn()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-
-        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
+        return MemberDto.of(member);
     }
 
+    @Override
+    public ServiceResult modifyMemberInfo(MemberInput parameter) {
+        String userId = parameter.getUserId();
 
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+        member.setPhone(parameter.getPhone());
+        member.setUpdatedAt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+    }
+
+    @Override
+    public ServiceResult updateMemberPassword(MemberInput parameter) {
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        if (!BCrypt.checkpw(parameter.getPassword(), member.getPassword())) {
+            return new ServiceResult(false, "비밀번호가 일치하지 않습니다");
+        }
+
+        String ancPassword = BCrypt.hashpw(parameter.getNewPassword(), BCrypt.gensalt());
+        member.setPassword(ancPassword);
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+    }
 
     @Override
     public boolean sendResetPassword(ResetPasswordInput parameter) {
@@ -194,100 +218,28 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberDto> list(MemberParameter parameter) {
-        long totalCount = memberMapper.selectListCount(parameter);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        List<MemberDto> list = memberMapper.selectList(parameter);
-        if (!CollectionUtils.isEmpty(list)) {
-            int i = 0;
-            for (MemberDto x : list) {
-                x.setTotalCount(totalCount);
-                x.setSequence(totalCount - parameter.getPageStart() -i);
-                i++;
-            }
-        }
-        return list;
-    }
-
-    @Override
-    public MemberDto detail(String userId) {
-        Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            return null;
-        }
+        Optional<Member> optionalMember = memberRepository.findByUserName((username));
+        validateMember(optionalMember);
 
         Member member = optionalMember.get();
-
-        return MemberDto.of(member);
-    }
-
-    @Override
-    public ServiceResult updateMemberPassword(MemberInput parameter) {
-        String userId = parameter.getUserId();
-
-        Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        if (MEMBER_STATUS_REQUEST.equals(member.getUserStatus())) {
+            throw new MemberNotEmailAuthException("이메일 인증 후 로그인을 해주세요");
         }
 
-        Member member = optionalMember.get();
-
-        if (!BCrypt.checkpw(parameter.getPassword(), member.getPassword())) {
-            return new ServiceResult(false, "비밀번호가 일치하지 않습니다");
+        if (MemberCode.MEMBER_STATUS_STOP.equals(member.getUserStatus())) {
+            throw new MemberStopUserException("정지된 회원입니다.");
         }
 
-        String ancPassword = BCrypt.hashpw(parameter.getNewPassword(), BCrypt.gensalt());
-        member.setPassword(ancPassword);
-        memberRepository.save(member);
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        return new ServiceResult(true);
-    }
-
-    @Override
-    public boolean updateStatus(String userId, String userStatus) {
-        Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        if (member.isAdminYn()) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
-        Member member = optionalMember.get();
-
-        member.setUserStatus(userStatus);
-        memberRepository.save(member);
-
-        return true;
-    }
-
-    @Override
-    public boolean updatePassword(String userId, String password) {
-        Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
-        }
-
-        Member member = optionalMember.get();
-
-        member.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        memberRepository.save(member);
-
-        return true;
-    }
-
-    @Override
-    public ServiceResult modifyMemberInfo(MemberInput parameter) {
-        String userId = parameter.getUserId();
-
-        Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
-        }
-
-        Member member = optionalMember.get();
-        member.setPhone(parameter.getPhone());
-        member.setUpdatedAt(LocalDateTime.now());
-        memberRepository.save(member);
-
-        return new ServiceResult(true);
+        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
     }
 
     private static void validateMember(Optional<Member> optionalMember) {

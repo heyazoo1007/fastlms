@@ -26,7 +26,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/register")
-    public String registerSubmit(Model model,
+    public String register(Model model,
                                  HttpServletRequest request,
                                  MemberInput parameter) {
         boolean result = memberService.register(parameter);
@@ -56,7 +56,7 @@ public class MemberController {
     public String memberInfo(Model model, Principal principal) {
         String userId = principal.getName();
 
-        MemberDto memberDto = memberService.detail(userId);
+        MemberDto memberDto = memberService.memberInfo(userId);
 
         model.addAttribute("memberDto", memberDto);
 
@@ -80,7 +80,7 @@ public class MemberController {
     public String getMemberPassword(Model model, Principal principal) {
         String userId = principal.getName();
 
-        MemberDto memberDto = memberService.detail(userId);
+        MemberDto memberDto = memberService.memberInfo(userId);
 
         model.addAttribute("memberDto", memberDto);
 
@@ -106,7 +106,7 @@ public class MemberController {
     public String memberTakeCourse(Model model, Principal principal) {
         String userId = principal.getName();
 
-        MemberDto memberDto = memberService.detail(userId);
+        MemberDto memberDto = memberService.memberInfo(userId);
 
         model.addAttribute("memberDto", memberDto);
 
@@ -119,7 +119,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/find/password")
-    public String findPasswordSubmit(Model model, ResetPasswordInput parameter) {
+    public String sendResetPassword(Model model, ResetPasswordInput parameter) {
 
         boolean result = false;
         try {
@@ -132,19 +132,8 @@ public class MemberController {
         return "member/find_password_result";
     }
 
-    @GetMapping("/member/reset/password")
-    public String resetPassword(Model model,
-                                HttpServletRequest request) {
-        String uuid = request.getParameter("id");
-
-        boolean result = memberService.checkResetPassword(uuid);
-        model.addAttribute("result", result);
-
-        return "member/reset_password";
-    }
-
     @PostMapping("/member/reset/password")
-    public String resetPasswordSubmit(Model model, ResetPasswordInput parameter) {
+    public String resetPassword(Model model, ResetPasswordInput parameter) {
         boolean result = false;
         try {
             memberService.resetPassword(parameter.getId(), parameter.getPassword());
@@ -154,5 +143,16 @@ public class MemberController {
         model.addAttribute("result", result);
 
         return "member/reset_password_result";
+    }
+
+    @GetMapping("/member/reset/password")
+    public String checkResetPassword(Model model,
+                                HttpServletRequest request) {
+        String uuid = request.getParameter("id");
+
+        boolean result = memberService.checkResetPassword(uuid);
+        model.addAttribute("result", result);
+
+        return "member/reset_password";
     }
 }

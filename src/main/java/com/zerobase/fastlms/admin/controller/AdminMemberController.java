@@ -3,6 +3,7 @@ package com.zerobase.fastlms.admin.controller;
 import com.zerobase.fastlms.admin.dto.MemberDto;
 import com.zerobase.fastlms.admin.model.MemberParameter;
 import com.zerobase.fastlms.admin.model.MemberInput;
+import com.zerobase.fastlms.admin.service.AdminMemberService;
 import com.zerobase.fastlms.course.controller.BaseController;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.util.PageUtil;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminMemberController extends BaseController {
 
+    private final AdminMemberService adminMemberService;
     private final MemberService memberService;
 
     @GetMapping("/admin/member/list.do")
@@ -25,7 +27,7 @@ public class AdminMemberController extends BaseController {
 
         parameter.init();
 
-        List<MemberDto> list = memberService.list(parameter);
+        List<MemberDto> list = adminMemberService.list(parameter);
 
         long totalCount = 0;
         if (list != null && list.size() > 0) {
@@ -46,7 +48,7 @@ public class AdminMemberController extends BaseController {
 
         parameter.init();
 
-        MemberDto memberDto = memberService.detail(parameter.getUserId());
+        MemberDto memberDto = memberService.memberInfo(parameter.getUserId());
         model.addAttribute("memberDto", memberDto);
 
         return "admin/member/detail";
@@ -55,7 +57,7 @@ public class AdminMemberController extends BaseController {
     @PostMapping("/admin/member/status.do")
     public String status(Model model, MemberInput parameter) {
         boolean result =
-        memberService.updateStatus(parameter.getUserId(), parameter.getUserStatus());
+        adminMemberService.updateStatus(parameter.getUserId(), parameter.getUserStatus());
 
         return "redirect:/admin/member/detail.do?userId" + parameter.getUserId();
     }
@@ -63,7 +65,7 @@ public class AdminMemberController extends BaseController {
     @PostMapping("/admin/member/password.do")
     public String password(Model model, MemberInput parameter) {
         boolean result =
-                memberService.updatePassword(parameter.getUserId(), parameter.getUserStatus());
+                adminMemberService.updatePassword(parameter.getUserId(), parameter.getUserStatus());
 
         return "redirect:/admin/member/detail.do?userId" + parameter.getUserId();
     }
