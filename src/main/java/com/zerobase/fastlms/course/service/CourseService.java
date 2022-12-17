@@ -19,4 +19,6 @@ public interface CourseService {
     CourseDto getById(long id);
 
     List<CourseDto> frontList(CourseParameter parameter);
+
+    CourseDto frontDetail(long id);
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>강좌 상세페이지</title>
+</head>
+
+<body>
+
+    <h1>강좌 상세 정보</h1>
+    <div th:replace="/fragments/layout.html :: fragment-body-menu"></div>
+
+    <div>
+        <h2>강좌명: <span th:text="${courseDto.subject}">강좌</span></h2>
+        <div th:utext="${courseDto.contents}"></div>
+        <div>
+            <p>가격 : <span th:text="${courseDto.price}"></span></p>
+            <p>할인 가격 : <span th:text="${courseDto.salePrice}"></span></p>
+        </div>
+
+        <div>
+            <button type="button">수강신청 하기</button>
+            <a href="/course">강좌 목록</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -8,5 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CourseParameter extends CommonParameter {
+    private long id;
     private long categoryId;
 }

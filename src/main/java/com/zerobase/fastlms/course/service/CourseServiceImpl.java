@@ -122,6 +122,15 @@ public class CourseServiceImpl implements CourseService {
                 .map(CourseDto :: of).orElse(null);
     }
 
+    @Override
+    public CourseDto frontDetail(long id) {
+        Optional<Course> optionalCourse = courseRepository.findById(id);
+        if (optionalCourse.isPresent()) {
+            return CourseDto.of(optionalCourse.get());
+        }
+        return null;
+    }
+
     private LocalDate getLocalDate(String value) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
