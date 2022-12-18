@@ -9,4 +9,7 @@ public interface MemberCode {
     String MEMBER_STATUS_ING = "ING";
     // 현재 이용정지인 상태
     String MEMBER_STATUS_STOP = "STOP";
+
+    // 현재 탈퇴한 회원 상태
+    String MEMBER_STATUS_WITHDRAW = "WITHDRAW";
 }

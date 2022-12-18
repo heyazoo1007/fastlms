@@ -32,6 +32,5 @@ public interface MemberService extends UserDetailsService {
     boolean checkResetPassword(String uuid);
 
 
-
-
+    ServiceResult withdrawMember(String userId, String password);
 }
