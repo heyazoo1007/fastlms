@@ -14,21 +14,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseDto {
-    Long id;
-    Long categoryId;
-    String imagePath;
-    String keyword;
-    String subject;
-    String summary;
-    String contents;
-    long price;
-    long salePrice;
-    LocalDate saleEndDate;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    private Long id;
+    private Long categoryId;
+    private String imagePath;
+    private String keyword;
+    private String subject;
+    private String summary;
+    private String contents;
+    private long price;
+    private long salePrice;
+    private LocalDate saleEndDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String saveFileName;
+    private String urlFileName;
 
-    long totalCount;
-    long sequence;
+    private long totalCount;
+    private long sequence;
 
     public static CourseDto of(Course course) {
         return CourseDto.builder()
@@ -44,6 +46,8 @@ public class CourseDto {
                 .saleEndDate(course.getSaleEndDate())
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
+                .saveFileName(course.getSaveFileName())
+                .urlFileName(course.getUrlFileName())
                 .build();
     }
 

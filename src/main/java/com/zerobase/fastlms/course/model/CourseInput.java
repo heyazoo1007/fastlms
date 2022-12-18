@@ -19,4 +19,8 @@ public class CourseInput {
     private String saleEndTimeText;
 
     private String idList;
+
+    private String saveFileName;
+    private String urlFileName;
+
 }

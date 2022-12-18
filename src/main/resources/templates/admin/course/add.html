@@ -39,7 +39,7 @@
   <h1>강좌 관리 - 강좌 등록</h1>
 
   <div class="detail">
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
           <table>
               <tbody>
               <tr>
@@ -99,6 +99,12 @@
                   <th>할인 종료일</th>
                   <td>
                       <input th:value="${courseDto.saleEndDate}" type="text" name="saleEndTimeText" required placeholder="할인 종료일 입력"/>
+                  </td>
+              </tr>
+              <tr>
+                  <th>첨부파일</th>
+                  <td>
+                      <input type="file" name="file"/>
                   </td>
               </tr>
               </tbody>
