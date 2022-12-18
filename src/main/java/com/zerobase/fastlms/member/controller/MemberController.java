@@ -1,7 +1,10 @@
 package com.zerobase.fastlms.member.controller;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.course.dto.TakeCourseDto;
+import com.zerobase.fastlms.course.entity.TakeCourse;
 import com.zerobase.fastlms.course.model.ServiceResult;
+import com.zerobase.fastlms.course.service.TakeCourseService;
 import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
 import com.zerobase.fastlms.member.service.MemberService;
@@ -13,12 +16,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    private final TakeCourseService takeCourseService;
 
     @GetMapping("/member/register")
     public String register() {
@@ -76,6 +81,17 @@ public class MemberController {
        return "redirect:/member/info";
     }
 
+    @GetMapping("/member/takecourse")
+    public String memberTakeCourse(Model model, Principal principal) {
+        String userId = principal.getName();
+
+        List<TakeCourseDto> list = takeCourseService.myCourse(userId);
+
+        model.addAttribute("list", list);
+
+        return "member/takecourse";
+    }
+
     @GetMapping("/member/password")
     public String getMemberPassword(Model model, Principal principal) {
         String userId = principal.getName();
@@ -100,17 +116,6 @@ public class MemberController {
         }
 
         return "redirect:/member/info";
-    }
-
-    @GetMapping("/member/takecourse")
-    public String memberTakeCourse(Model model, Principal principal) {
-        String userId = principal.getName();
-
-        MemberDto memberDto = memberService.memberInfo(userId);
-
-        model.addAttribute("memberDto", memberDto);
-
-        return "member/takecourse";
     }
 
     @GetMapping("/member/find/password")

@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class TakeCourseInput {
     long courseId;
     String userId;
+
+    long takeCourseId;
 }
