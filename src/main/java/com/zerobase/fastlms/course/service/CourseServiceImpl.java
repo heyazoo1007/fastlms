@@ -171,6 +171,12 @@ public class CourseServiceImpl implements CourseService {
         return serviceResult;
     }
 
+    @Override
+    public List<CourseDto> listAll() {
+        List<Course> courseList = courseRepository.findAll();
+        return CourseDto.of(courseList);
+    }
+
     private LocalDate getLocalDate(String value) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

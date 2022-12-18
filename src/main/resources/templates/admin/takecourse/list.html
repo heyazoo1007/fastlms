@@ -40,6 +40,13 @@
   <script>
     $(document).ready(function () {
 
+        $('#searchCourseId').on('change', function () {
+
+            var id = $(this).val();
+
+            location.href = "?searchCourseId=" + id;
+        })
+
         $('.row-buttons button'). on('click', function() {
 
             var status = $(this).val();
@@ -62,10 +69,16 @@
 <body>
   <h1>수강 관리</h1>
 
-
   <div class="list">
       <div class="buttons">
-          <a class="total-count">전체 <span th:text="${totalCount}"></span></a>
+          <select id="searchCourseId">
+              <option value="">전체 강좌</option>
+              <option th:each="x : ${courseList}"
+                      th:selected="${#strings.equals(param.searchCourseId, x.id)}"
+                      th:value="${x.id}" th:text="${x.subject}">자바 프로그래밍</option>
+          </select>
+
+          <p class="total-count">전체 <span th:text="${totalCount}"></span></p>
       </div>
 
     <table>
@@ -80,43 +93,48 @@
             </tr>
         </thead>
         <tbody id="dataList">
-            <tr th:each="x : ${list}">
-                <td><input type="checkbox" th:value="${x.id}"></td>
-                <td th:each="${x.sequence}">1</td>
-                <td>
-                    <p th:text="${x.createdAtText}"></p>
-                </td>
-                <td>
-                    <p th:text="${x.subject}">강좌명</p>
-                </td>
-                <td>
-                    <p th:text="${x.userName}"></p>
-                </td>
-                <td>
-                    <p th:text="${x.userId}"></p>
-                </td>
-                <td>
-                    <p th:text="${x.phone}"></p>
-                </td>
-                <td>
-                    <p th:text="${x.status}"></p>
+        <tr th:each="x : ${list}">
+            <td><input type="checkbox" th:value="${x.id}"></td>
+            <td th:each="${x.sequence}">1</td>
+            <td>
+                <p th:text="${x.createdAtText}"></p>
+            </td>
+            <td>
+                <p th:text="${x.subject}">강좌명</p>
+            </td>
+            <td>
+                <p th:text="${x.userName}"></p>
+            </td>
+            <td>
+                <p th:text="${x.userId}"></p>
+            </td>
+            <td>
+                <p th:text="${x.phone}"></p>
+            </td>
+            <td>
+                <p th:text="${x.status}"></p>
 
-                    <p th:text="${x.status eq 'REQUST'}">수강신청</p>
-                    <p th:text="${x.status eq 'COMPLETE'}">결제완료</p>
-                    <p th:text="${x.status eq 'CANCEL'}">수강취소</p>
-                </td>
-                <td>
-                    <div class="row-buttons" th:if="${x.status eq 'REQUEST'}">
-                        <input type="hidden" name="id" th:value="${x.id}"/>
-                        <button value="COMPLETE" type="button">결제완료 처리</button>
-                        <button value="CANCEL" type="button">수강취소 처리</button>
-                    </div>
-                </td>
-            </tr>
+                <p th:text="${x.status eq 'REQUST'}">수강신청</p>
+                <p th:text="${x.status eq 'COMPLETE'}">결제완료</p>
+                <p th:text="${x.status eq 'CANCEL'}">수강취소</p>
+            </td>
+            <td>
+                <div class="row-buttons" th:if="${x.status eq 'REQUEST'}">
+                    <input type="hidden" name="id" th:value="${x.id}"/>
+                    <button value="COMPLETE" type="button">결제완료 처리</button>
+                    <button value="CANCEL" type="button">수강취소 처리</button>
+                </div>
+            </td>
+        </tr>
+        <tr th:if="${#lists.size(list) < 1}">
+            <td colspan="5">
+                <p class="nothing">내용이 없습니다.</p>
+            </td>
+        </tr>
         </tbody>
     </table>
 
-      <div class="pager" th:utext="${pager}"></div>
+    <div class="pager" th:if=${#lists.size(list) > 0} th:utext="${pager}"></div>
 
 </div>
 
