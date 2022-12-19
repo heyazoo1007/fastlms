@@ -16,9 +16,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
-
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final MemberService memberService;
+
+    @Bean
+    PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     UserAuthenticationFailureHandler getFailureHandler() {
@@ -42,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                         "/",
                         "/member/register",
                         "/member/email-auth",
-                        "/member/find/password"
+                        "/member/find-password"
                 )
                 .permitAll();
 
@@ -68,14 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
         auth.userDetailsService(memberService)
                 .passwordEncoder(getPasswordEncoder());
 
         super.configure(auth);
-    }
-
-    private PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

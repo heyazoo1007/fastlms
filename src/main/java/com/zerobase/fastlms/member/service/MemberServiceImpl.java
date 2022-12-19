@@ -39,7 +39,6 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MailComponents mailComponents;
 
-    private final MemberMapper memberMapper;
 
     @Override
     public boolean register(MemberInput parameter) {
@@ -53,11 +52,12 @@ public class MemberServiceImpl implements MemberService {
         }
 
         String uuid = UUID.randomUUID().toString();
+        String encPassword = BCrypt.hashpw(parameter.getPassword(), BCrypt.gensalt());
         Member member = Member.builder()
                 .userId(userEmail)
                 .userName(parameter.getUserName())
                 .phone(parameter.getPhone())
-                .password(BCrypt.hashpw(parameter.getPassword(), BCrypt.gensalt()))
+                .password(encPassword)
                 .createdAt(LocalDateTime.now())
                 .emailAuthYn(false)
                 .emailAuthKey(uuid)
@@ -247,8 +247,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Optional<Member> optionalMember = memberRepository.findByUserName((username));
+        Optional<Member> optionalMember = memberRepository.findById(username);
         validateMember(optionalMember);
 
         Member member = optionalMember.get();
@@ -261,7 +260,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         if (MemberCode.MEMBER_STATUS_WITHDRAW.equals(member.getUserStatus())) {
-            throw new MemberStopUserException("정지된 회원입니다.");
+            throw new MemberStopUserException("탈퇴한 회원입니다.");
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();

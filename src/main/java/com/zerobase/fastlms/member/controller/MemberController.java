@@ -48,13 +48,11 @@ public class MemberController {
         boolean result = memberService.emailAuth(uuid);
         model.addAttribute("result", result);
 
-        return"member/email_auth";
+        return "member/email_auth";
     }
 
     @RequestMapping("/member/login")
     public String login() {
-        System.out.println("request get");
-
         return "member/login";
     }
 
@@ -119,12 +117,12 @@ public class MemberController {
         return "redirect:/member/info";
     }
 
-    @GetMapping("/member/find/password")
+    @GetMapping("/member/find-password")
     public String findPassword() {
         return "member/find_password";
     }
 
-    @PostMapping("/member/find/password")
+    @PostMapping("/member/find-password")
     public String sendResetPassword(Model model, ResetPasswordInput parameter) {
 
         boolean result = false;
