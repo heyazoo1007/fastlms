@@ -5,6 +5,7 @@ import com.zerobase.fastlms.admin.model.MemberParameter;
 import com.zerobase.fastlms.admin.model.MemberInput;
 import com.zerobase.fastlms.admin.service.AdminMemberService;
 import com.zerobase.fastlms.course.controller.BaseController;
+import com.zerobase.fastlms.member.entity.LoginHistory;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,9 @@ public class AdminMemberController extends BaseController {
 
         MemberDto memberDto = memberService.memberInfo(parameter.getUserId());
         model.addAttribute("memberDto", memberDto);
+
+        List<LoginHistory> loginHistories = memberService.getLoginInfo(parameter.getUserId());
+        model.addAttribute("loginHistories", loginHistories);
 
         return "admin/member/detail";
     }

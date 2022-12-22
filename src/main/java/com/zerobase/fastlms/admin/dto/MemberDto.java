@@ -28,6 +28,7 @@ public class MemberDto {
     LocalDateTime resetPasswordLimitTime;
 
     boolean adminYn;
+    String userStatus;
 
     long totalCount;
     long sequence;
@@ -42,6 +43,7 @@ public class MemberDto {
                 .emailAuthYn(member.isEmailAuthYn())
                 .emailAuthTime(member.getEmailAuthTime())
                 .adminYn(member.isAdminYn())
+                .userStatus(member.getUserStatus())
                 .build();
     }
 

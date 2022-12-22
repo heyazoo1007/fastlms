@@ -114,6 +114,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<LoginHistory> getLoginInfo(String userId) {
+        return loginHistoryRepository.findAllByUserId(userId);
+    }
+
+    @Override
     public ServiceResult modifyMemberInfo(MemberInput parameter) {
         String userId = parameter.getUserId();
 
