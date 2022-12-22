@@ -1,6 +1,7 @@
 package com.zerobase.fastlms.member.controller;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.components.MailComponents;
 import com.zerobase.fastlms.course.dto.TakeCourseDto;
 import com.zerobase.fastlms.course.entity.TakeCourse;
 import com.zerobase.fastlms.course.model.ServiceResult;
@@ -10,9 +11,11 @@ import com.zerobase.fastlms.member.model.ResetPasswordInput;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.RequestUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +28,8 @@ public class MemberController {
 
     private final MemberService memberService;
     private final TakeCourseService takeCourseService;
+
+    private final MailComponents mailComponents;
 
     @GetMapping("/member/register")
     public String register() {
@@ -51,8 +56,9 @@ public class MemberController {
         return "member/email_auth";
     }
 
-    @RequestMapping("/member/login")
+    @RequestMapping ("/member/login")
     public String login() {
+
         return "member/login";
     }
 

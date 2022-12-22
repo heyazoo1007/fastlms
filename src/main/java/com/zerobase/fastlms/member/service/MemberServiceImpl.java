@@ -1,16 +1,16 @@
 package com.zerobase.fastlms.member.service;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
-import com.zerobase.fastlms.admin.mapper.MemberMapper;
-import com.zerobase.fastlms.admin.model.MemberParameter;
 import com.zerobase.fastlms.components.MailComponents;
 import com.zerobase.fastlms.course.model.ServiceResult;
 import com.zerobase.fastlms.exception.MemberNotEmailAuthException;
 import com.zerobase.fastlms.exception.MemberStopUserException;
+import com.zerobase.fastlms.member.entity.LoginHistory;
 import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.entity.MemberCode;
 import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
+import com.zerobase.fastlms.member.repository.LoginHistoryRepository;
 import com.zerobase.fastlms.member.repository.MemberRepository;
 import com.zerobase.fastlms.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MailComponents mailComponents;
+    private final LoginHistoryRepository loginHistoryRepository;
 
 
     @Override
@@ -95,6 +95,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void saveLoginHistory(String userId, String clientIp, String userAgent) {
+        // 로그인 성공해서 날라온 메시지이고, ip와 useragent 모두 검증해서 보낸 거라 따로 검증 필요없나?
+        loginHistoryRepository.save(
+                LoginHistory.of(userId, clientIp, userAgent));
+    }
+
+    @Override
     public MemberDto memberInfo(String userId) {
         Optional<Member> optionalMember = memberRepository.findById(userId);
         if (!optionalMember.isPresent()) {
@@ -111,9 +118,7 @@ public class MemberServiceImpl implements MemberService {
         String userId = parameter.getUserId();
 
         Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
-        }
+        validateMember(optionalMember);
 
         Member member = optionalMember.get();
         member.setPhone(parameter.getPhone());
@@ -128,9 +133,7 @@ public class MemberServiceImpl implements MemberService {
         String userId = parameter.getUserId();
 
         Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
-        }
+        validateMember(optionalMember);
 
         Member member = optionalMember.get();
 
@@ -220,9 +223,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ServiceResult withdrawMember(String userId, String password) {
         Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (!optionalMember.isPresent()) {
-            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
-        }
+        validateMember(optionalMember);
 
         Member member = optionalMember.get();
         if (!PasswordUtils.equals(password, member.getPassword())) {
@@ -248,6 +249,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findById(username);
+
         validateMember(optionalMember);
 
         Member member = optionalMember.get();
@@ -270,7 +272,9 @@ public class MemberServiceImpl implements MemberService {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
-        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
+        String userId = member.getUserId();
+
+        return new User(userId, member.getPassword(), grantedAuthorities);
     }
 
     private static void validateMember(Optional<Member> optionalMember) {

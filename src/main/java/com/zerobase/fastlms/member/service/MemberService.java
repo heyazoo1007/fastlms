@@ -6,14 +6,14 @@ import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
-
 public interface MemberService extends UserDetailsService {
 
     boolean register(MemberInput parameter);
 
     // uuid에 해당하는 계정을 활성화
     boolean emailAuth(String uuid);
+
+    void saveLoginHistory(String userId, String clientIp, String userAgent);
 
     MemberDto memberInfo(String userId);
 
@@ -29,7 +29,6 @@ public interface MemberService extends UserDetailsService {
 
     // 입력받은 uuid 값이 유효한지 확인
     boolean checkResetPassword(String uuid);
-
 
     ServiceResult withdrawMember(String userId, String password);
 }

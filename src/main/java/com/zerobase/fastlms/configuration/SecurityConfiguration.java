@@ -4,6 +4,7 @@ import com.zerobase.fastlms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -28,6 +30,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     UserAuthenticationFailureHandler getFailureHandler() {
         return new UserAuthenticationFailureHandler();
     }
+
+    @Bean
+    AuthenticationSuccessHandler getSuccessHandler() {
+        return new LoginSuccessHandler(memberService);
+    }
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -56,6 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.formLogin()
                 .loginPage("/member/login")
+                .successHandler(getSuccessHandler())
                 .failureHandler(getFailureHandler())
                 .permitAll();
 
