@@ -1,8 +1,12 @@
 package com.zerobase.fastlms.main;
 
+import com.zerobase.fastlms.admin.repository.AdminBannerRepository;
+import com.zerobase.fastlms.admin.service.AdminBannerService;
 import com.zerobase.fastlms.components.MailComponents;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,16 +22,12 @@ import java.io.PrintWriter;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
+    private final AdminBannerService adminBannerService;
 
-    private final MailComponents mailComponents;
-
-    @RequestMapping("/")
-    public String index() {
-//        String email = "busyheyazoo1007@gmail.com";
-//        String subject = "안녕하세요. 제로베이스 입니다.";
-//        String text = "<p>안녕하세요</p><p>반갑습니다</p>";
-//        mailComponents.sendMail(email, subject, text);
-
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("urlFilename",
+                adminBannerService.getPublicUrlFilename());
         return "index";
     }
 

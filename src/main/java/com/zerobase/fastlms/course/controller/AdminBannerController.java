@@ -3,7 +3,6 @@ package com.zerobase.fastlms.course.controller;
 import com.zerobase.fastlms.admin.dto.BannerDto;
 import com.zerobase.fastlms.admin.model.BannerInput;
 import com.zerobase.fastlms.admin.service.AdminBannerService;
-import com.zerobase.fastlms.course.dto.CourseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

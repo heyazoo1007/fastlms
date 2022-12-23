@@ -12,4 +12,6 @@ public interface AdminBannerService {
     List<BannerDto> getBannerList();
 
     BannerDto getById(long id);
+
+    String getPublicUrlFilename();
 }

@@ -47,7 +47,6 @@ public class AdminBannerServiceImpl implements AdminBannerService{
     @Override
     public List<BannerDto> getBannerList() {
         List<Banner> bannerList = adminBannerRepository.findAll();
-        System.out.println(bannerList.get(0));
 
         List<BannerDto> list = new ArrayList<>();
         for (Banner banner : bannerList) {
@@ -59,5 +58,23 @@ public class AdminBannerServiceImpl implements AdminBannerService{
     @Override
     public BannerDto getById(long id) {
         return adminBannerRepository.findById(id).map(BannerDto::of).orElse(null);
+    }
+
+    @Override
+    public String getPublicUrlFilename() {
+        List<Banner> bannerList =
+                adminBannerRepository.findAll();
+
+        if (bannerList.size() > 0) {
+            return "";
+        }
+
+        String publicUrlFilename = "";
+        for (Banner banner : bannerList) {
+            if (banner.isPublicOrNot()) {
+                publicUrlFilename = banner.getUrlFilename();
+            }
+        }
+        return publicUrlFilename;
     }
 }
