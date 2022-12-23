@@ -14,4 +14,6 @@ public interface AdminBannerService {
     BannerDto getById(long id);
 
     String getPublicUrlFilename();
+
+    void delete(String idList);
 }

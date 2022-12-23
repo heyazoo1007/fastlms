@@ -18,6 +18,8 @@ public class BannerDto {
     private String urlFilename;
     private LocalDate createdAt;
 
+    private String sequence;
+
     public static BannerDto of(Banner banner) {
         return BannerDto.builder()
                 .id(banner.getId())

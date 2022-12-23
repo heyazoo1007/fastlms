@@ -82,6 +82,13 @@ public class AdminBannerController extends BaseController {
         return "admin/banner/list";
     }
 
+    @PostMapping("/admin/banner/delete.do")
+    public String deleteBanner(BannerInput parameter) {
+        adminBannerService.delete(parameter.getIdList());
+
+        return "redirect:/admin/banner/list.do";
+    }
+
     private String[] getNewFileName(String baseLocalPath, String baseUrlPath, String originalFilename) {
         LocalDate now = LocalDate.now();
 

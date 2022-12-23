@@ -16,4 +16,6 @@ public class BannerInput extends CommonParameter {
     private String urlFilename;
     private boolean publicOrNot;
 
+    private String idList; // 삭제 요청하는 배너들의 리스트가 , 로 이어져있다
+
 }
