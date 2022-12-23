@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>배너관리-배너수정</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .list table th, .list table td {
+            border:solid 1px #000;
+        }
+        .buttons {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:fragement="fragment-admin-body-menu">
+        <a href="/admin/main.do">관리자 메인</a> |
+        <a href="/admin/member/list.do">회원 관리</a> |
+        <a href="/admin/category/list.do">카테고리 관리</a> |
+        <a href="/admin/course/list.do">강좌 관리</a> |
+        <a href="/admin/takecourse/list.do">수강 관리</a> |
+        <a href="/admin/banner/list.do">배너 관리</a> |
+        <a href="/member/logout">로그아웃</a>
+        <br/>
+        <hr/>
+    </div>
+    <h1>배너관리 - 배너 수정</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="list">
+            <table>
+                <tbody>
+                <tr>
+                    <th>배너명</th>
+                    <td><input th:value="${bannerDto.bannerName}" type="text" name="bannerName" placeholder="배너명 입력" required></td>
+                </tr>
+                <tr>
+                    <th>배너 파일</th>
+                    <td>
+                        <img src="${bannerDto.urlFilename}" th:if="${bannerDto.urlFilename != null}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>링크 주소</th>
+                    <td><input th:value="${bannerDto.linkAddress}" type="text" name="linkAddress" placeholder="링크 주소 입력" required></td>
+                </tr>
+                <tr>
+                    <th>오픈 방법</th>
+                    <td>
+                        <select name="howToOpen">
+                            <option value="">오픈 방법 선택</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>정렬 순서</th>
+                    <td><input th:value="${bannerDto.sortSequence}" type="text" name="sortSequence" placeholder="정렬 순서 입력" required></td>
+                </tr>
+                <tr>
+                    <th>공개 여부</th>
+                    <td><input th:value="${bannerDto.isPublicOrNot()}" type="checkbox" name="publicOrNot"/>공개</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </br>
+        <div class="buttons">
+            <button type="submit">배너 수정 하기</button>
+            <button type="button" onclick="location.href='/admin/banner/list.do'">목록 이동</button>
+        </div>
+
+    </form>
+
+</body>
+</html>

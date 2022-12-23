@@ -93,7 +93,7 @@
       <table>
           <thead>
           <tr>
-              <th><input type="checkbox"></th>
+              <th><input id="selectAll" type="checkbox" /></th>
               <th>No</th>
               <th>배너명</th>
               <th>이미지</th>
@@ -106,7 +106,11 @@
                   <input type="checkbox" th:value="${x.id}">
               </td>
               <td th:text="${x.sequence}"></td>
-              <td th:text="${x.bannerName}"></td>
+              <td>
+                  <p>
+                      <a th:href="'modify.do?id=' + ${x.id}" th:text="${x.bannerName}">배너명</a>
+                  </p>
+              </td>
               <td>
                   <img src="${x.urlFilename}" th:if="${x.urlFilename != null}">
               </td>

@@ -37,6 +37,12 @@ public class AdminBannerController extends BaseController {
                              MultipartFile file,
                              BannerInput parameter) {
 
+        adminBannerService.saveBanner(getFilename(file, parameter));
+
+        return "redirect:/admin/banner/list.do";
+    }
+
+    private BannerInput getFilename(MultipartFile file, BannerInput parameter) {
         String saveFilename = "";
         String urlFilename = "";
 
@@ -62,9 +68,39 @@ public class AdminBannerController extends BaseController {
 
         parameter.setSaveFilename(saveFilename);
         parameter.setUrlFilename(urlFilename);
-        adminBannerService.saveBanner(parameter);
+
+        return parameter;
+    }
+
+    @GetMapping("/admin/banner/modify.do")
+    public String getModifyBannerPage(Model model, BannerInput parameter) {
+        long id = parameter.getId();
+        BannerDto bannerDto = adminBannerService.getById(id);
+        if (bannerDto == null) {
+            model.addAttribute("message", "배너정보가 존재하지 않습니다.");
+            return "common/error";
+        }
+
+        model.addAttribute("bannerDto", bannerDto);
+
+        return "admin/banner/modify";
+    }
+
+    @PostMapping("/admin/banner/modify.do")
+    public String modifyBanner(Model model,
+                                MultipartFile file,
+                               BannerInput parameter) {
+        long id = parameter.getId();
+        BannerDto bannerDto = adminBannerService.getById(id);
+        if (bannerDto == null) {
+            model.addAttribute("message", "배너정보가 존재하지 않습니다.");
+            return "common/error";
+        }
+
+        adminBannerService.modifyBanner(getFilename(file, parameter));
 
         return "redirect:/admin/banner/list.do";
+
     }
 
     @GetMapping("/admin/banner/list.do")

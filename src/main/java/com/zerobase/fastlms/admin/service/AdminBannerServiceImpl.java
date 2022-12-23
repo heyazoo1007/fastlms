@@ -48,9 +48,11 @@ public class AdminBannerServiceImpl implements AdminBannerService{
     public List<BannerDto> getBannerList() {
         List<Banner> bannerList = adminBannerRepository.findAll();
 
+        long sequence = 1;
         List<BannerDto> list = new ArrayList<>();
         for (Banner banner : bannerList) {
-            list.add(BannerDto.of(banner));
+            list.add(BannerDto.of(banner, sequence));
+            sequence++;
         }
         return list;
     }

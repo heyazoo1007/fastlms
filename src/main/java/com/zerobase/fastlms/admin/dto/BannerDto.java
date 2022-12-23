@@ -16,9 +16,13 @@ public class BannerDto {
     private String bannerName;
     private String saveFilename;
     private String urlFilename;
+    private String linkAddress;
+    private String howToOpen;
+    private String sortSequence;
+    private boolean publicOrNot;
     private LocalDate createdAt;
 
-    private String sequence;
+    private long sequence;
 
     public static BannerDto of(Banner banner) {
         return BannerDto.builder()
@@ -26,7 +30,23 @@ public class BannerDto {
                 .bannerName(banner.getBannerName())
                 .saveFilename(banner.getSaveFilename())
                 .urlFilename(banner.getUrlFilename())
+                .linkAddress(banner.getLinkAddress())
+                .sortSequence(banner.getSortSequence())
+                .publicOrNot(banner.isPublicOrNot())
                 .createdAt(LocalDateTime.now().toLocalDate())
+                .build();
+    }
+    public static BannerDto of(Banner banner, long sequence) {
+        return BannerDto.builder()
+                .id(banner.getId())
+                .bannerName(banner.getBannerName())
+                .saveFilename(banner.getSaveFilename())
+                .urlFilename(banner.getUrlFilename())
+                .linkAddress(banner.getLinkAddress())
+                .sortSequence(banner.getSortSequence())
+                .publicOrNot(banner.isPublicOrNot())
+                .createdAt(LocalDateTime.now().toLocalDate())
+                .sequence(sequence)
                 .build();
     }
 }
