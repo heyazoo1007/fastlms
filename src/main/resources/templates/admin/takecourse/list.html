@@ -126,15 +126,9 @@
                 </div>
             </td>
         </tr>
-        <tr th:if="${#lists.size(list) < 1}">
-            <td colspan="5">
-                <p class="nothing">내용이 없습니다.</p>
-            </td>
-        </tr>
+
         </tbody>
     </table>
-
-    <div class="pager" th:if=${#lists.size(list) > 0} th:utext="${pager}"></div>
 
 </div>
 

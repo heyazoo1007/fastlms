@@ -114,7 +114,6 @@ public class AdminCourseController extends BaseController {
 
     @GetMapping("/admin/course/list.do")
     public String list(Model model, CourseParameter parameter) {
-
         parameter.init();
 
         List<CourseDto> list = courseService.list(parameter);
