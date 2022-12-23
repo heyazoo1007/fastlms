@@ -1,9 +1,6 @@
 package com.zerobase.fastlms.admin.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Setter
 @Getter
 @Entity
@@ -22,6 +20,12 @@ public class Banner {
     private Long id;
 
     private String bannerName;
-    private String image;
+    private String saveFilename;
+    private String urlFilename;
+    private String linkAddress;
+    private String sortSequence;
+    private boolean publicOrNot;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
 }

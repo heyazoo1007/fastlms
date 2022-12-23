@@ -10,6 +10,7 @@
         }
         .list table th, .list table td {
             border:solid 1px #000;
+            text-align: center;
         }
         p.nothing {
             text-align: center;
@@ -23,12 +24,12 @@
 </head>
 <body>
     <div th:fragement="fragment-admin-body-menu">
-        <a href="/admin/main.do">관리자 메인</a>|
-        <a href="/admin/member/list.do">회원 관리</a>|
-        <a href="/admin/category/list.do">카테고리 관리</a>|
-        <a href="/admin/course/list.do">강좌 관리</a>|
-        <a href="/admin/takecourse/list.do">수강 관리</a>|
-        <a href="/admin/banner/list.do">배너 관리</a>|
+        <a href="/admin/main.do">관리자 메인</a> |
+        <a href="/admin/member/list.do">회원 관리</a> |
+        <a href="/admin/category/list.do">카테고리 관리</a> |
+        <a href="/admin/course/list.do">강좌 관리</a> |
+        <a href="/admin/takecourse/list.do">수강 관리</a> |
+        <a href="/admin/banner/list.do">배너 관리</a> |
         <a href="/member/logout">로그아웃</a>
         <br/>
         <hr/>
@@ -36,14 +37,15 @@
 
   <h1>배너관리</h1>
 
-  <a href="/banner/add.do">배너 등록</a>
-  <a href="/banner/add.do">선택 삭제</a>
+  <a href="/admin/banner/add.do">배너 등록</a>
+  <a href="/admin/banner/add.do">선택 삭제</a>
   <p class="total-count" align="right">전체 <span th:text="${totalCount}"></span>개</p>
 
   <div class="list">
       <table>
           <thead>
           <tr>
+              <th><input type="checkbox"></th>
               <th>No</th>
               <th>배너명</th>
               <th>이미지</th>
@@ -53,11 +55,14 @@
           <tbody id="dataList">
           <tr th:each="x : ${list}">
               <td>
-                  <input type="checkbox" th:value="${x.id}">
+                  <input type="checkbox">
               </td>
-              <td th:each="${x.bannerName}"></td>
-              <td th:each="${x.image}"></td>
-              <td th:each="${x.createdAt}"></td>
+              <td th:text="${x.id}"></td>
+              <td th:text="${x.bannerName}"></td>
+              <td>
+                  <img src="${x.urlFilename}" th:if="${x.urlFilename != null}">
+              </td>
+              <td th:text="${x.createdAt}"></td>
           </tr>
           <tr th:if="${#lists.size(list) < 1}">
               <td colspan="5">
