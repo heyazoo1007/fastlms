@@ -69,15 +69,17 @@ public class AdminBannerController extends BaseController {
 
     @GetMapping("/admin/banner/list.do")
     public String getBannerList(Model model, BannerInput parameter) {
+        parameter.init();
+
         List<BannerDto> list = adminBannerService.getBannerList();
         model.addAttribute("list", list);
 
         long totalCount = list.size();
         model.addAttribute("totalCount", totalCount);
 
-        String pagerHtml = super.getPagerHtml(totalCount, parameter.getPageSize(),
+        String pager = getPagerHtml(totalCount, parameter.getPageSize(),
                 parameter.getPageIndex(), parameter.getQueryString());
-        model.addAttribute("pagerHtml", pagerHtml);
+        model.addAttribute("pager", pager);
 
         return "admin/banner/list";
     }
