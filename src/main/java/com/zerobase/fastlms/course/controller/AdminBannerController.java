@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,44 +31,12 @@ public class AdminBannerController extends BaseController {
     }
 
     @PostMapping("/admin/banner/add.do")
-    public String saveBanner(Model model,
-                             HttpServletRequest request,
-                             MultipartFile file,
+    public String saveBanner(MultipartFile file,
                              BannerInput parameter) {
 
         adminBannerService.saveBanner(getFilename(file, parameter));
 
         return "redirect:/admin/banner/list.do";
-    }
-
-    private BannerInput getFilename(MultipartFile file, BannerInput parameter) {
-        String saveFilename = "";
-        String urlFilename = "";
-
-        if (file != null) {
-            String originalFileName = file.getOriginalFilename();
-
-            String baseLocalPath = "/Users/yejinkim/Desktop/heyazoo1007/fastlms/files/";
-            String baseUrlPath = "/files";
-
-            String[] arrFilename = getNewFileName(baseLocalPath, baseUrlPath, originalFileName);
-
-            saveFilename = arrFilename[0];
-            urlFilename = arrFilename[1];;
-
-            try {
-                File newFile = new File(baseLocalPath);
-                FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(newFile));
-            } catch (IOException e) {
-                log.info("#######################");
-                log.info(e.getMessage());
-            }
-        }
-
-        parameter.setSaveFilename(saveFilename);
-        parameter.setUrlFilename(urlFilename);
-
-        return parameter;
     }
 
     @GetMapping("/admin/banner/modify.do")
@@ -100,7 +67,6 @@ public class AdminBannerController extends BaseController {
         adminBannerService.modifyBanner(getFilename(file, parameter));
 
         return "redirect:/admin/banner/list.do";
-
     }
 
     @GetMapping("/admin/banner/list.do")
@@ -127,7 +93,7 @@ public class AdminBannerController extends BaseController {
         return "redirect:/admin/banner/list.do";
     }
 
-    private String[] getNewFileName(String baseLocalPath, String baseUrlPath, String originalFilename) {
+    private String[] getNewSaveFile(String baseLocalPath, String baseUrlPath, String originalFilename) {
         LocalDate now = LocalDate.now();
 
         String[] dirs = {
@@ -161,5 +127,35 @@ public class AdminBannerController extends BaseController {
         }
 
         return new String[]{newFileName, newUrlFileName};
+    }
+
+    private BannerInput getFilename(MultipartFile file, BannerInput parameter) {
+        String saveFilename = "";
+        String urlFilename = "";
+
+        if (file != null) {
+            String originalFileName = file.getOriginalFilename();
+
+            String baseLocalPath = "/Users/yejinkim/Desktop/heyazoo1007/fastlms/files";
+            String baseUrlPath = "/files";
+
+            String[] arrFilename = getNewSaveFile(baseLocalPath, baseUrlPath, originalFileName);
+
+            saveFilename = arrFilename[0];
+            urlFilename = arrFilename[1];
+
+            try {
+                File newFile = new File(baseLocalPath);
+                FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(newFile));
+            } catch (IOException e) {
+                log.info("#######################");
+                log.info(e.getMessage());
+            }
+        }
+
+        parameter.setSaveFilename(saveFilename);
+        parameter.setUrlFilename(urlFilename);
+
+        return parameter;
     }
 }

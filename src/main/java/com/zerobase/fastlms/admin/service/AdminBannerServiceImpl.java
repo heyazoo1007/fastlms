@@ -41,6 +41,8 @@ public class AdminBannerServiceImpl implements AdminBannerService{
             banner.setLinkAddress(parameter.getLinkAddress());
             banner.setSortSequence(parameter.getSortSequence());
             banner.setUpdatedAt(LocalDateTime.now());
+
+            adminBannerRepository.save(banner);
         }
     }
 

@@ -36,12 +36,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new LoginSuccessHandler(memberService);
     }
 
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
                 .antMatchers("/favicon.ico", "/files/**");
+
+        super.configure(web);
     }
 
     @Override
